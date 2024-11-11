@@ -1,5 +1,7 @@
 package Account;
 
-public class SavingsAcc extends Account{
-  
+import java.util.LinkedList;
+
+public class SavingsAcc extends Account {
+    
 }
