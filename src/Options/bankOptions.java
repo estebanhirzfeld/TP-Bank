@@ -1,7 +1,7 @@
 package Options;
 
-public enum bankOptions {
+public enum BankOptions {
 
-    ADD_USER, MODIFY_USER, DELETE_USER
+    ADD_USER, MODIFY_USER, DELETE_USER, EXIT
     
 }
