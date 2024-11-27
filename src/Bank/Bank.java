@@ -35,6 +35,11 @@ public class Bank {
     user.setUserName(newUserName);
   }
 
+  public void modUserId(User user) {
+    int newUserId = Integer.parseInt(JOptionPane.showInputDialog("Enter new user ID:"));
+    user.setId(newUserId);
+  }
+
   public void deleteUser() {
     JOptionPane.showMessageDialog(null, "Delete user!!!");
   }
@@ -118,19 +123,22 @@ public class Bank {
   // menu 3
   public static void userOptions(Bank bank, User user) {
     int option;
-
+    String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId() ;
     do {
-      option = JOptionPane.showOptionDialog(null, "Modify User (" + user.getUserName() + ")\n Choose an option:", null, 0, 0, null,
+      option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:", "Modify User (" + user.getUserName() + ")", 0, 0, null,
           userOptions.values(), userOptions.values()[0]);
       switch (option) {
         case 0:
           bank.modUserName(user);
           break;
         case 1:
+          bank.modUserId(user);
+          break;
+        case 2:
           break;
       }
 
-    } while (option != 1);
+    } while (option != 2);
   }
 
   // esto hizo el profe en una tarea lo dejo por si nos sirve jsjs

@@ -1,5 +1,5 @@
 package Options;
 
 public enum userOptions {
-  CHANGE_USERNAME, RETURN
+  CHANGE_USERNAME, CHANGE_ID, RETURN
 }
