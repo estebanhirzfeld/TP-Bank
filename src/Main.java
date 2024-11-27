@@ -12,11 +12,11 @@ public class Main {
 		do {
 			option = JOptionPane.showOptionDialog(null, "", "Bank (banco)",  JOptionPane.DEFAULT_OPTION, 
       JOptionPane.INFORMATION_MESSAGE, icon, menu, menu[0]);
-			switch (option) {
-			case 0:
+			switch (menu[option]) {
+			case "Sign in":
 				Bank.bankOptions(bank); 
 				break;
-			case 1:
+			case "Close":
 				break;
 			
 			}
