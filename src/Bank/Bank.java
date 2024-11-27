@@ -123,8 +123,8 @@ public class Bank {
   // menu 3
   public static void userOptions(Bank bank, User user) {
     int option;
-    String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId() ;
     do {
+      String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId() ;
       option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:", "Modify User (" + user.getUserName() + ")", 0, 0, null,
           userOptions.values(), userOptions.values()[0]);
       switch (option) {
