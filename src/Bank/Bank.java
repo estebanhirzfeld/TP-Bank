@@ -2,7 +2,8 @@ package Bank;
 
 import java.time.LocalTime;
 import javax.swing.JOptionPane;
-import Options.BankOptions;
+import Options.bankOptions;
+import Options.loggedOptions;
 import User.User;
 
 public class Bank {
@@ -27,8 +28,7 @@ public class Bank {
       User.addUser(userName, id);
       JOptionPane.showMessageDialog(null, "User added successfully");
     }
-  
-  
+
     public void modUser(){
       JOptionPane.showMessageDialog(null, "Modify user!!!");
   
@@ -37,40 +37,87 @@ public class Bank {
     public void deleteUser(){
       JOptionPane.showMessageDialog(null, "Delete user!!!");
     }
+
+    public User login(){
+      String username = JOptionPane.showInputDialog("Enter your username:");
+      int id = Integer.parseInt(JOptionPane.showInputDialog("Enter your user ID:"));
   
+      for (User user : User.getUsers()) { 
+          if (user.getUserName().equals(username) && user.getId() == id) {
+              JOptionPane.showMessageDialog(null, "Login successful");
+              return user;
+          }
+      }
+  
+      JOptionPane.showMessageDialog(null, "Error. User not found.");
+      return null;
+    }
+
+    public void addAccount(){
+    JOptionPane.showMessageDialog(null, "hola soy funcion agregar account!!");
+    }
+
     public void checkName(){
   
     }
-  
   
     public void selectUser(){
       
     }
   
   
+  //menu
   public static void bankOptions(Bank bank){
     int option;
   
     do{
-      option = JOptionPane.showOptionDialog(null,"ENUM BANCO \n Choose an option:", null, 0, 0, null,BankOptions.values(), BankOptions.values()[0]);
+      option = JOptionPane.showOptionDialog(null,"ENUM BANCO \n Choose an option:", null, 0, 0, null,bankOptions.values(), bankOptions.values()[0]);
       switch(option) {
-        case 0:
-            bank.addUser();
-          break;
+      case 0:
+        bank.addUser();
+        break;
       case 1:
-          bank.modUser();
-          break;
+        User user = bank.login();
+        if(user != null){
+          loggedOptions(bank,user);
+        }
+        break;
       case 2:
-          bank.deleteUser();
-          break;
-      case 3:
-          JOptionPane.showMessageDialog(null, "Returning...");
-          break;
+        break;
   }
 
-  }while(option!=3);
+  }while(option!=2);
 
 }
+
+//menu 2
+public static void loggedOptions(Bank bank, User user){
+  int option;
+  
+  do{
+    option = JOptionPane.showOptionDialog(null,"ENUM LOGGED \n Choose an option:", null, 0, 0, null,loggedOptions.values(), loggedOptions.values()[0]);
+    switch(option) {
+    case 0:
+      bank.addAccount();
+      break;
+    case 1:
+      bank.modUser();
+      break;
+    case 2:
+      bank.deleteUser();
+      break;
+    case 3:
+    break;
+}
+
+}while(option!=3);
+}
+
+
+//menu 3
+
+
+
 
 //esto hizo el profe en una tarea lo dejo por si nos sirve jsjs
 	// 	for (Materias materia: Materias.values()) {

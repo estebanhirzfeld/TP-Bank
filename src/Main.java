@@ -14,7 +14,7 @@ public class Main {
       JOptionPane.INFORMATION_MESSAGE, icon, menu, menu[0]);
 			switch (option) {
 			case 0:
-				Bank.bankOptions(bank);
+				Bank.bankOptions(bank); 
 				break;
 			case 1:
 				break;

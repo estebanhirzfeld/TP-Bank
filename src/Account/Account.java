@@ -5,24 +5,19 @@ import java.util.LinkedList;
 
 import User.User;
 
-public class Account {
-  private User user;
-  private String accType;
-  private int accNumber;
-  private double balance;
-  private LocalDate openingDate;
-  private SavingsAcc savingsAcc;
-  private CheckingAcc checkingAcc;
+public abstract class Account {
+  protected User user;
+  protected String accType;
+  protected int accNumber;
+  protected double balance;
+  protected LocalDate openingDate;
 
-  public Account(User user, String accType, int accNumber, double balance, LocalDate openingDate, SavingsAcc savingsAcc,
-      CheckingAcc checkingAcc) {
+  public Account(User user, String accType, int accNumber, double balance, LocalDate openingDate) {
     this.user = user;
     this.accType = accType;
     this.accNumber = accNumber;
-    this.balance = balance;
-    this.openingDate = openingDate;
-    this.savingsAcc = savingsAcc;
-    this.checkingAcc = checkingAcc;
+    this.balance = 0.0;
+    this.openingDate = LocalDate.now();
   }
 
   public User getUser() {
@@ -65,27 +60,15 @@ public class Account {
     this.openingDate = openingDate;
   }
 
-  public SavingsAcc getSavingsAcc() {
-    return savingsAcc;
-  }
 
-  public void setSavingsAcc(SavingsAcc savingsAcc) {
-    this.savingsAcc = savingsAcc;
-  }
 
-  public CheckingAcc getCheckingAcc() {
-    return checkingAcc;
-  }
-
-  public void setCheckingAcc(CheckingAcc checkingAcc) {
-    this.checkingAcc = checkingAcc;
-  }
 
   @Override
   public String toString() {
     return "Account [user=" + user + ", accType=" + accType + ", accNumber=" + accNumber + ", balance=" + balance
-        + ", openingDate=" + openingDate + ", savingsAcc=" + savingsAcc + ", checkingAcc=" + checkingAcc + "]";
+        + ", openingDate=" + openingDate + "]";
   }
+
 
   
 

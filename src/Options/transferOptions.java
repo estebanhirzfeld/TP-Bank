@@ -1,7 +1,5 @@
 package Options;
 
-public enum AccOptions {
-
+public enum transferOptions {
     DEPOSIT, WITHDRAW, TRANSFER, RETURN
-    
 }

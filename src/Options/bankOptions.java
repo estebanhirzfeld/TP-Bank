@@ -1,7 +1,8 @@
 package Options;
 
-public enum BankOptions {
+public enum bankOptions {
 
-    ADD_USER, MODIFY_USER, DELETE_USER, RETURN
+    // NEW_USER, MODIFY_USER, DELETE_USER, RETURN
+    NEW_USER, LOG_IN, RETURN
     
 }

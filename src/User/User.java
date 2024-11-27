@@ -38,7 +38,7 @@ public class User {
       this.id = id;
     }
   
-    public LinkedList<User> getUsers() {
+    public static LinkedList<User> getUsers() {
       return users;
     }
   
@@ -52,11 +52,6 @@ public class User {
       User newUser = new User(userName, id);  
       users.add(newUser);  
   }
-
-
-
-
-
 
   @Override
   public String toString() {
