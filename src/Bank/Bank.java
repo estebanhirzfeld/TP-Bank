@@ -6,6 +6,7 @@ import Options.accTypeOptions;
 import Options.bankOptions;
 import Options.loggedOptions;
 import Options.transOptions;
+import Options.transferOptions;
 import Options.userOptions;
 import User.User;
 import java.util.LinkedList;
@@ -92,12 +93,12 @@ public class Bank {
     JOptionPane.showMessageDialog(null, "withdraw function");
   }
 
-  public void transfer(User user) {
-    LinkedList<User> userList = User.getUsers(); // Assuming this method returns a LinkedList<User>
+  public User selectTransferUser(User user) {
+    LinkedList<User> userList = User.getUsers();
 
     if (userList.isEmpty()) {
       JOptionPane.showMessageDialog(null, "No users available to transfer.");
-      return;
+      return null;
     }
 
     User[] userArray = userList.toArray(new User[0]);
@@ -113,9 +114,21 @@ public class Bank {
 
     if (selectedUser != null) {
       User selected = (User) selectedUser;
-      JOptionPane.showMessageDialog(null, "Selected user: " + selected.getUserName());
+      return selected;
     } else {
       JOptionPane.showMessageDialog(null, "No user selected.");
+      return null;
+    }
+  }
+
+  public double setTransferAmount(User user) {
+    double amount = Math.abs(Double.parseDouble(JOptionPane.showInputDialog("Input amount")));
+
+    if (amount > user.getCheckingAcc().getBalance()) {
+      JOptionPane.showMessageDialog(null, "Insufficent funds!");
+      return 0;
+    } else {
+      return amount;
     }
   }
 
@@ -160,11 +173,11 @@ public class Bank {
           accountOptions(bank, user);
           break;
         case 1:
-        if (user.getCheckingAcc() == null) {
-          JOptionPane.showMessageDialog(null, "You must have a Checking Account first to make transactions!");
-          break;
-        }
-        bank.transfer(user);
+          if (user.getCheckingAcc() == null) {
+            JOptionPane.showMessageDialog(null, "You must have a Checking Account first to make transactions!");
+            break;
+          }
+          transOptions(bank, user);
           break;
         case 2:
           userOptions(bank, user);
@@ -240,10 +253,43 @@ public class Bank {
           bank.withdraw(user);
           break;
         case 2:
+          transferOptions(bank, user);
+          break;
+        case 3:
           break;
       }
 
-    } while (option != 2);
+    } while (option != 3);
+  }
+
+  // menu 6
+  public static void transferOptions(Bank bank, User user) {
+    int option;
+    User selectedUser = null;
+    double transferAmount = 0;
+    String msg = "Selected User: " + selectedUser + "\nAmount: " + transferAmount + "\n\nAvalaible Funds: " + user.getCheckingAcc().getBalance() + "\n Choose an option:";
+    do {
+      msg = "Selected User: " + selectedUser + "\n Amount: " + transferAmount;
+      option = JOptionPane.showOptionDialog(null, msg,
+          "Account: (" + user.getUserName() + ")", 0, 0, null,
+          transferOptions.values(), transferOptions.values()[0]);
+      switch (option) {
+        case 0:
+          selectedUser = bank.selectTransferUser(user);
+          break;
+        case 1:
+          transferAmount = bank.setTransferAmount(user);
+          break;
+        case 2:
+          if(transferAmount <= 0) {
+            JOptionPane.showMessageDialog(null, "Invalid Action, please enter valid amount");
+          }
+          break;
+        case 3:
+          break;
+      }
+
+    } while (option != 3);
   }
 
 }
