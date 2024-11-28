@@ -160,7 +160,6 @@ public class Bank {
         case 2:
           break;
       }
-
     } while (option != 2);
   }
 
