@@ -8,9 +8,10 @@ public class Main {
   public static void main(String[] args) {
     ImageIcon icon = new ImageIcon(Main.class.getResource("/Assets/bank_logo.png"));
     Bank bank = new Bank("Bank");
-	User user1 = new User("steve", 123);
-	User user2 = new User("martu", 456);
-	User user3 = new User("midudios", 999);
+		User.addUser("steve", 123);
+		User.addUser("martu", 456);
+		User.addUser("midudios", 999);
+		User.addUser("", 0);
     String[] menu = {"Sign in","Close"};
     int option = 0;
 		do {
