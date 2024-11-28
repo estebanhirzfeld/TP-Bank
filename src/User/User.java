@@ -1,10 +1,15 @@
 package User;
 
 import java.util.LinkedList;
+
+import Account.CheckingAcc;
+import Account.SavingsAcc;
 import Bank.Bank;
 
 public class User {
   private Bank bank;
+  private CheckingAcc checkingAcc;
+  private SavingsAcc savingsAcc;
   private String userName;
   private int id;
   private static LinkedList<User> users = new  LinkedList<User>();
@@ -13,7 +18,23 @@ public class User {
       this.userName = userName;
       this.id = id;
     }
-  
+
+    public void setCheckingAcc(CheckingAcc checkingAcc) {
+      this.checkingAcc = checkingAcc;
+    }
+
+    public void setSavingsAcc(SavingsAcc savingsAcc) {
+      this.savingsAcc = savingsAcc;
+    }
+
+    public CheckingAcc getCheckingAcc() {
+      return checkingAcc;
+    }
+
+    public SavingsAcc getSavingsAcc() {
+      return savingsAcc;
+    }
+
     public Bank getBank() {
       return bank;
     }

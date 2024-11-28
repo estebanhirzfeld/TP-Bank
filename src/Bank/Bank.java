@@ -2,6 +2,11 @@ package Bank;
 
 import java.time.LocalTime;
 import javax.swing.JOptionPane;
+
+import Account.Account;
+import Account.CheckingAcc;
+import Account.SavingsAcc;
+import Options.accTypeOptions;
 import Options.bankOptions;
 import Options.loggedOptions;
 import Options.userOptions;
@@ -59,8 +64,24 @@ public class Bank {
     return null;
   }
 
-  public void addAccount() {
-    JOptionPane.showMessageDialog(null, "hola soy funcion agregar account!!");
+  public void addSavingsAcc(User user) {
+    if (user.getSavingsAcc() == null) {
+      int accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
+      SavingsAcc newUserSavingsAcc = new SavingsAcc(user, name, accNumber, 0);
+      user.setSavingsAcc(newUserSavingsAcc);
+      newUserSavingsAcc.setUser(user);
+    }
+
+  }
+
+  public void addCheckingAcc(User user) {
+    if (user.getCheckingAcc() == null) {
+      int accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
+      CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
+      user.setCheckingAcc(newUserCheckingAcc);
+      newUserCheckingAcc.setUser(user);
+    }
+
   }
 
   public void checkName() {
@@ -105,7 +126,7 @@ public class Bank {
           0, 0, null, loggedOptions.values(), loggedOptions.values()[0]);
       switch (option) {
         case 0:
-          bank.addAccount();
+          accountOptions(bank, user);
           break;
         case 1:
           userOptions(bank, user);
@@ -124,8 +145,9 @@ public class Bank {
   public static void userOptions(Bank bank, User user) {
     int option;
     do {
-      String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId() ;
-      option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:", "Modify User (" + user.getUserName() + ")", 0, 0, null,
+      String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId();
+      option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:",
+          "Modify User (" + user.getUserName() + ")", 0, 0, null,
           userOptions.values(), userOptions.values()[0]);
       switch (option) {
         case 0:
@@ -133,6 +155,30 @@ public class Bank {
           break;
         case 1:
           bank.modUserId(user);
+          break;
+        case 2:
+          break;
+      }
+
+    } while (option != 2);
+  }
+
+  // menu 4
+  public static void accountOptions(Bank bank, User user) {
+    int option;
+    do {
+      String msg = "Name: " + user.getUserName() + "\n Checking Account: " + user.getCheckingAcc()
+          + "\n Savings Account: " + user.getSavingsAcc();
+
+      option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:",
+          "Modify User (" + user.getUserName() + ")", 0, 0, null,
+          accTypeOptions.values(), accTypeOptions.values()[0]);
+      switch (option) {
+        case 0:
+          bank.addCheckingAcc(user);
+          break;
+        case 1:
+          bank.addSavingsAcc(user);
           break;
         case 2:
           break;
