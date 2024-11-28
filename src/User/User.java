@@ -66,9 +66,7 @@ public class User {
     public void setUsers(LinkedList<User> users) {
       User.users = users;
     }
-  
 
-  //Adds created user to the list
     public static void addUser(String userName, int id) {
       User newUser = new User(userName, id);  
       users.add(newUser);  
