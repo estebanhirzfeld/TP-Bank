@@ -12,7 +12,7 @@ public abstract class Account {
   protected double balance;
   protected LocalDate openingDate;
 
-  public Account(User user, String accType, int accNumber, double balance, LocalDate openingDate) {
+  public Account(User user, String accType, int accNumber, double balance) {
     this.user = user;
     this.accType = accType;
     this.accNumber = accNumber;
@@ -60,16 +60,9 @@ public abstract class Account {
     this.openingDate = openingDate;
   }
 
-
-
-
   @Override
   public String toString() {
-    return "Account [user=" + user + ", accType=" + accType + ", accNumber=" + accNumber + ", balance=" + balance
-        + ", openingDate=" + openingDate + "]";
+    return "" + this.accNumber;
   }
-
-
-  
 
 }
