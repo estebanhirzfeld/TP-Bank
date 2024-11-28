@@ -1,17 +1,15 @@
 package Bank;
 
-import java.time.LocalTime;
-import javax.swing.JOptionPane;
-
-import Account.Account;
 import Account.CheckingAcc;
 import Account.SavingsAcc;
 import Options.accTypeOptions;
 import Options.bankOptions;
 import Options.loggedOptions;
-import Options.userOptions;
 import Options.transOptions;
+import Options.userOptions;
 import User.User;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
 
 public class Bank {
   private String name;
@@ -85,23 +83,45 @@ public class Bank {
 
   }
 
-  public void deposit(User user){
+  public void deposit(User user) {
     JOptionPane.showMessageDialog(null, "Deposit function");
+
   }
 
-  public void withdraw(User user){
+  public void withdraw(User user) {
     JOptionPane.showMessageDialog(null, "withdraw function");
   }
-  
-  public void transfer(User user){
-    JOptionPane.showMessageDialog(null, "transfer function");
-  }
 
+  public void transfer(User user) {
+    LinkedList<User> userList = User.getUsers(); // Assuming this method returns a LinkedList<User>
+
+    if (userList.isEmpty()) {
+      JOptionPane.showMessageDialog(null, "No users available to transfer.");
+      return;
+    }
+
+    User[] userArray = userList.toArray(new User[0]);
+
+    Object selectedUser = JOptionPane.showInputDialog(
+        null,
+        "Select a user:",
+        "Hiru Bank",
+        JOptionPane.INFORMATION_MESSAGE,
+        null,
+        userArray,
+        userArray[0]);
+
+    if (selectedUser != null) {
+      User selected = (User) selectedUser;
+      JOptionPane.showMessageDialog(null, "Selected user: " + selected.getUserName());
+    } else {
+      JOptionPane.showMessageDialog(null, "No user selected.");
+    }
+  }
 
   public void checkName() {
 
   }
-
 
   // menu
   public static void bankOptions(Bank bank) {
@@ -140,17 +160,24 @@ public class Bank {
           accountOptions(bank, user);
           break;
         case 1:
-          userOptions(bank, user);
+        if (user.getCheckingAcc() == null) {
+          JOptionPane.showMessageDialog(null, "You must have a Checking Account first to make transactions!");
+          break;
+        }
+        bank.transfer(user);
           break;
         case 2:
-          bank.deleteUser(user);
-          option = 3;
+          userOptions(bank, user);
           break;
         case 3:
+          bank.deleteUser(user);
+          option = 4;
+          break;
+        case 4:
           break;
       }
 
-    } while (option != 3);
+    } while (option != 4);
   }
 
   // menu 3
@@ -192,17 +219,14 @@ public class Bank {
           bank.addSavingsAcc(user);
           break;
         case 2:
-          transOptions(bank, user);
           break;
-        case 3:
-        break;
       }
 
-    } while (option != 3);
+    } while (option != 2);
   }
 
-  //menu 5
-  public static void transOptions(Bank bank, User user){
+  // menu 5
+  public static void transOptions(Bank bank, User user) {
     int option;
     do {
       option = JOptionPane.showOptionDialog(null, "Choose an option:",
@@ -216,13 +240,10 @@ public class Bank {
           bank.withdraw(user);
           break;
         case 2:
-          bank.transfer(user);
           break;
-        case 3:
-        break;
       }
 
-    } while (option != 3);
+    } while (option != 2);
   }
 
 }
