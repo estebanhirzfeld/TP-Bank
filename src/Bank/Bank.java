@@ -134,6 +134,7 @@ public class Bank {
           break;
         case 2:
           bank.deleteUser(user);
+          option = 3;
           break;
         case 3:
           break;
@@ -145,8 +146,8 @@ public class Bank {
   // menu 3
   public static void userOptions(Bank bank, User user) {
     int option;
+    String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId();
     do {
-      String msg = "Name: " + user.getUserName() + "\n ID: " + user.getId();
       option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:",
           "Modify User (" + user.getUserName() + ")", 0, 0, null,
           userOptions.values(), userOptions.values()[0]);
