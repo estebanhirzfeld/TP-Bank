@@ -2,7 +2,9 @@ package Account;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.List;
 
+import Transaction.Transaction;
 import User.User;
 
 public abstract class Account {
@@ -11,6 +13,7 @@ public abstract class Account {
   protected int accNumber;
   protected double balance;
   protected LocalDate openingDate;
+  protected LinkedList<Transaction> transactionHistory;
 
   public Account(User user, String accType, int accNumber, double balance) {
     this.user = user;
@@ -18,6 +21,7 @@ public abstract class Account {
     this.accNumber = accNumber;
     this.balance = 0.0;
     this.openingDate = LocalDate.now();
+    this.transactionHistory = new LinkedList<>(); 
   }
 
   public User getUser() {
@@ -60,6 +64,18 @@ public abstract class Account {
     this.openingDate = openingDate;
   }
 
+  public List<Transaction> getTransactionHistory() {
+    return transactionHistory;
+  }
+
+  public void setTransactionHistory(LinkedList<Transaction> transactionHistory) {
+    this.transactionHistory = transactionHistory;
+  }
+
+  public void updateBalance(double amount) {
+    this.balance += amount;
+}
+  
   @Override
   public String toString() {
     return "" + this.accNumber;
