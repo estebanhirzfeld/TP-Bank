@@ -78,7 +78,7 @@ public class User {
 
   @Override
   public String toString() {
-    return "User [bank=" + bank + ", userName=" + userName + ", id=" + id + ", users=" + users + "]";
+    return userName;
   }
 
 
