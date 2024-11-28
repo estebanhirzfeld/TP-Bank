@@ -53,6 +53,10 @@ public class User {
       users.add(newUser);  
   }
 
+    public static void deleteUser(User user){
+      users.remove(user);
+    }
+
   @Override
   public String toString() {
     return "User [bank=" + bank + ", userName=" + userName + ", id=" + id + ", users=" + users + "]";

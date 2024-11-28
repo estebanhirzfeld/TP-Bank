@@ -22,7 +22,6 @@ public class Bank {
     this.name = name;
   }
 
-  // Create user
   public void addUser() {
     String userName = JOptionPane.showInputDialog("Enter user name:");
     int id = Integer.parseInt(JOptionPane.showInputDialog("Enter user ID:"));
@@ -40,8 +39,10 @@ public class Bank {
     user.setId(newUserId);
   }
 
-  public void deleteUser() {
-    JOptionPane.showMessageDialog(null, "Delete user!!!");
+  public void deleteUser(User user) {
+    User.deleteUser(user);
+    JOptionPane.showMessageDialog(null, "User deleted successfully.");
+    user = null;
   }
 
   public User login() {
@@ -111,7 +112,7 @@ public class Bank {
           userOptions(bank, user);
           break;
         case 2:
-          bank.deleteUser();
+          bank.deleteUser(user);
           break;
         case 3:
           break;
@@ -140,6 +141,7 @@ public class Bank {
 
     } while (option != 2);
   }
+
 
   // esto hizo el profe en una tarea lo dejo por si nos sirve jsjs
   // for (Materias materia: Materias.values()) {
