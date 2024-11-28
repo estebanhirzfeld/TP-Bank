@@ -6,7 +6,7 @@ import User.User;
 
 public class Main {
   public static void main(String[] args) {
-    ImageIcon icon = new ImageIcon(Main.class.getResource("/Assets/banco.jpg"));
+    ImageIcon icon = new ImageIcon(Main.class.getResource("/Assets/bank_logo.png"));
     Bank bank = new Bank("Bank");
 	User user1 = new User("steve", 123);
 	User user2 = new User("martu", 456);

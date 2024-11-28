@@ -1,5 +1,5 @@
 package Options;
 
-public enum transferOptions {
+public enum transOptions {
     DEPOSIT, WITHDRAW, TRANSFER, RETURN
 }

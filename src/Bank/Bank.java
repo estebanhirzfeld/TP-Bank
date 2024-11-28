@@ -10,6 +10,7 @@ import Options.accTypeOptions;
 import Options.bankOptions;
 import Options.loggedOptions;
 import Options.userOptions;
+import Options.transOptions;
 import User.User;
 
 public class Bank {
@@ -72,7 +73,6 @@ public class Bank {
       user.setSavingsAcc(newUserSavingsAcc);
       newUserSavingsAcc.setUser(user);
     }
-
   }
 
   public void addCheckingAcc(User user) {
@@ -85,13 +85,23 @@ public class Bank {
 
   }
 
+  public void deposit(User user){
+    JOptionPane.showMessageDialog(null, "Deposit function");
+  }
+
+  public void withdraw(User user){
+    JOptionPane.showMessageDialog(null, "withdraw function");
+  }
+  
+  public void transfer(User user){
+    JOptionPane.showMessageDialog(null, "transfer function");
+  }
+
+
   public void checkName() {
 
   }
 
-  public void selectUser() {
-
-  }
 
   // menu
   public static void bankOptions(Bank bank) {
@@ -172,7 +182,7 @@ public class Bank {
           + "\n Savings Account: " + user.getSavingsAcc();
 
       option = JOptionPane.showOptionDialog(null, msg + "\n Choose an option:",
-          "Modify User (" + user.getUserName() + ")", 0, 0, null,
+          "Account: (" + user.getUserName() + ")", 0, 0, null,
           accTypeOptions.values(), accTypeOptions.values()[0]);
       switch (option) {
         case 0:
@@ -182,41 +192,37 @@ public class Bank {
           bank.addSavingsAcc(user);
           break;
         case 2:
+          transOptions(bank, user);
           break;
+        case 3:
+        break;
       }
 
-    } while (option != 2);
+    } while (option != 3);
   }
 
-  // esto hizo el profe en una tarea lo dejo por si nos sirve jsjs
-  // for (Materias materia: Materias.values()) {
-  // if (materia.ordinal()==opcion) {
+  //menu 5
+  public static void transOptions(Bank bank, User user){
+    int option;
+    do {
+      option = JOptionPane.showOptionDialog(null, "Choose an option:",
+          "Account: (" + user.getUserName() + ")", 0, 0, null,
+          transOptions.values(), transOptions.values()[0]);
+      switch (option) {
+        case 0:
+          bank.deposit(user);
+          break;
+        case 1:
+          bank.withdraw(user);
+          break;
+        case 2:
+          bank.transfer(user);
+          break;
+        case 3:
+        break;
+      }
 
-  // JOptionPane.showMessageDialog(null,
-  // "Nombre " + materia.getNombre() + " " + materia.getCorrelativa() );
-
-  // opcion = JOptionPane.showOptionDialog(null, "Seleccione día", "", opcion,
-  // opcion, null, Dia.values(), Dia.values());
-
-  // for (Dia dia: Dia.values()) {
-  // if (dia.ordinal()==opcion) {
-  // //Forma normal
-  // Inscripcion nueva = new Inscripcion(materia.getNombre(),
-  // LocalTime.of(11, 10),dia.name());
-
-  // JOptionPane.showMessageDialog(null, nueva);
-
-  // inscripciones.add(nueva);
-
-  // /*Forma acortada -> Creo directo el objeto en la lista, sin necesidad de
-  // crear un objeto de apoyo
-
-  // inscripciones.add(new Inscripcion(materia.getNombre(),
-  // LocalTime.of(11, 10),dia.name());
-
-  // * */
-  // }
-  // }
-  // }
+    } while (option != 3);
+  }
 
 }

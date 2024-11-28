@@ -3,6 +3,8 @@ package Transaction;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import Account.Account;
 
 public class Transaction {
@@ -59,6 +61,7 @@ public class Transaction {
   public void setTransactions(LinkedList<Transaction> transactions) {
     this.transactions = transactions;
   }
+
 
   @Override
   public String toString() {
