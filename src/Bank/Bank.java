@@ -38,89 +38,92 @@ public class Bank {
 }
 
 public void addUser() {
-    String userName;
+  String userName = getValidUserName();
+  if (userName == null) { 
+      return; 
+  }
 
-    
-    while (true) {
-        userName = JOptionPane.showInputDialog("Enter user name:");
+  int id = getValidUserId();
+  if (id == -1) { 
+      return; 
+  }
 
-        if (userName == null) {
-            int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
-                return; 
-            }
-            continue; 
-        }
+  // Add user and confirm
+  User.addUser(userName, id);
+  JOptionPane.showMessageDialog(null, "User added successfully");
+}
+private String getValidUserName() {
+  String userName;
 
-        if (userName.trim().isEmpty() || !userName.matches("[a-zA-Z]+") || userName.length() < 3) {
-            JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name with at least 3 letters. Try again.");
-        } else {
-            break; 
-        }
-    }
+  while (true) {
+      userName = JOptionPane.showInputDialog("Enter user name:");
 
-    int id;
+      if (userName == null) {
+          int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
+          if (choice == JOptionPane.YES_OPTION) {
+              return null; 
+          }
+          continue; 
+      }
 
-    
-    while (true) {
-        String input = JOptionPane.showInputDialog("Enter user ID:");
+      if (userName.trim().isEmpty() || !userName.matches("[a-zA-Z]+") || userName.length() < 3) {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name with at least 3 letters. Try again.");
+      } else {
+          break; 
+      }
+  }
+  return userName;
+}
 
-        if (input == null) {
-            int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
-                return; 
-            }
-            continue; 
-        }
+private int getValidUserId() {
+  int id;
 
-        if (isNumeric(input)) {
-            id = Integer.parseInt(input);
+  while (true) {
+      String input = JOptionPane.showInputDialog("Enter user ID:");
 
-            if (id >= 10 && id <= 250) {
-                break; 
-            } else {
-                JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
-        }
-    }
+      if (input == null) {
+          int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
+          if (choice == JOptionPane.YES_OPTION) {
+              return -1;
+          }
+          continue;
+      }
 
-    // Agregar usuario y confirmar.
-    User.addUser(userName, id);
-    JOptionPane.showMessageDialog(null, "User added successfully");
+      if (isNumeric(input)) {
+          id = Integer.parseInt(input);
+
+          if (id >= 10 && id <= 250) {
+              break;
+          } else {
+              JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
+          }
+      } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
+      }
+  }
+  return id;
 }
 
 
-  public void modUserName(User user) {
+public void modUserName(User user) {
+  String newUserName = getValidUserName(); 
 
-    String newUserName;
+  if (newUserName != null) {  
+      user.setUserName(newUserName);
+      JOptionPane.showMessageDialog(null, "User modified successfully");
+  }
+}
 
-    do {
-      newUserName = JOptionPane.showInputDialog("Enter new user name:");
+public void modUserId(User user) {
+  int newUserId = getValidUserId(); // Obtener el ID válido o -1 si se canceló.
 
-      if (newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-z]+")
-          || newUserName.length() < 3) {
-        JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
-      }
-    } while (newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-zA-Z]+"));
-
-    user.setUserName(newUserName);
-    JOptionPane.showMessageDialog(null, "User modified successfully");
+  if (newUserId == -1) {
+      return; 
   }
 
-  public void modUserId(User user) {
-    int newUserId;
-    do {
-      newUserId = Integer.parseInt(JOptionPane.showInputDialog("Enter new user ID:"));
-
-      if (newUserId < 10 || newUserId > 250) {
-        JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
-      }
-    } while (newUserId < 10 || newUserId > 250);
-    user.setId(newUserId);
-    JOptionPane.showMessageDialog(null, "ID modified successfully");
-  }
+  user.setId(newUserId); 
+  JOptionPane.showMessageDialog(null, "ID modified successfully");
+}
 
   public void deleteUser(User user) {
     User.deleteUser(user);
