@@ -55,6 +55,7 @@ public class Bank {
 
     User.addUser(userName, id);
     JOptionPane.showMessageDialog(null, "User added successfully");
+
   }
 
 
@@ -71,11 +72,20 @@ public class Bank {
 		}while(newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-zA-Z]+"));
 
     user.setUserName(newUserName);
+    JOptionPane.showMessageDialog(null, "User modified successfully");
   }
 
   public void modUserId(User user) {
-    int newUserId = Integer.parseInt(JOptionPane.showInputDialog("Enter new user ID:"));
+    int newUserId;
+    do {
+      newUserId = Integer.parseInt(JOptionPane.showInputDialog("Enter new user ID:"));
+
+			if (newUserId<10||newUserId>250) {
+				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
+			}
+		} while (newUserId<10||newUserId>250);
     user.setId(newUserId);
+    JOptionPane.showMessageDialog(null, "ID modified successfully");
   }
 
   public void deleteUser(User user) {
@@ -101,7 +111,12 @@ public class Bank {
 
   public void addSavingsAcc(User user) {
     if (user.getSavingsAcc() == null) {
-      int accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
+      int accNumber;
+
+      do {
+        accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
+      } while (accNumber >= 2 && accNumber <= 20);
+
       SavingsAcc newUserSavingsAcc = new SavingsAcc(user, name, accNumber, 0);
       user.setSavingsAcc(newUserSavingsAcc);
       newUserSavingsAcc.setUser(user);
@@ -109,46 +124,83 @@ public class Bank {
   }
 
   public void addCheckingAcc(User user) {
+
     if (user.getCheckingAcc() == null) {
-      int accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
-      CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
-      user.setCheckingAcc(newUserCheckingAcc);
-      newUserCheckingAcc.setUser(user);
+      int accNumber; 
+
+      do {
+        accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
+        CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
+        if (accNumber<2||accNumber>20) {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
+        } else{
+          user.setCheckingAcc(newUserCheckingAcc);
+          newUserCheckingAcc.setUser(user);
+        }
+      } while (accNumber >= 2 && accNumber <= 20);
     }
   }
 
   public void deposit(User user) {
-    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+    double amount;
+
     if (user.getCheckingAcc() != null) {
-      Transaction.deposit(user.getCheckingAcc(), amount);
+      do {
+        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+            if (amount > 0) {
+                break; 
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+            }
+        }while(true); 
+        Transaction.deposit(user.getCheckingAcc(), amount);
+        JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+    } else {
+        JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
     }
   }
 
   public void withdraw(User user) {
     double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
     if (user.getCheckingAcc() != null) {
-      Transaction.withdraw(user.getCheckingAcc(), amount);
+      do {
+        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+            if (amount > 0) {
+                break; 
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+            }
+        }while(true); 
+        JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+        Transaction.withdraw(user.getCheckingAcc(), amount);
+    }else {
+        JOptionPane.showMessageDialog(null, "ERROR.");
     }
   }
 
   public void transfer(User user) {
-    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+    double amount;
 
     if (user.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
+    } else{
+      do {
+        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+
+            if (amount > 0) {
+              User targetUser = Transaction.selectTransferUser(user);
+              if (targetUser == null || targetUser.getCheckingAcc() == null) {
+                  JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
+              } else {
+                  Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
+                  JOptionPane.showMessageDialog(null, "Transfer successful! Amount: " + amount);
+              }
+              return;
+          } else {
+              JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+          }
+        }while(true); 
     }
-
-    User targetUser = Transaction.selectTransferUser(user);
-
-    if (targetUser == null || targetUser.getCheckingAcc() == null) {
-      JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-    }
-
-    Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
-  }
-
-  public void checkName() {
-
   }
 
     public static String formatTransactionHistory(User user) {
