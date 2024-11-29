@@ -339,48 +339,29 @@ public class Bank {
     }
   }
 
-  public void transfer(User user) {
-    if (user.getCheckingAcc() != null) {
-      while (true) {
-        String input = JOptionPane.showInputDialog("Enter transfer amount:");
-
-        if (input == null || input.trim().isEmpty()) {
-
-          return;
-        }
-
-        if (!isNumeric(input)) {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid numeric amount.");
-          continue;
-        }
-
-        double amount = Double.parseDouble(input);
-
-        if (amount > 0) {
-          User targetUser = Transaction.selectTransferUser(user);
-          if (targetUser == null) {
-            JOptionPane.showMessageDialog(null, "Transfer canceled.");
-            return;
-          }
-
-          if (targetUser.getCheckingAcc() == null) {
-            JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-          } else if (amount <= user.getCheckingAcc().getBalance()) {
-            Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
-            JOptionPane.showMessageDialog(null, "Transfer successful! Amount: " + amount);
-            return;
-          } else {
-            JOptionPane.showMessageDialog(null,
-                "ERROR: Amount must be less than or equal to your balance ($" + user.getCheckingAcc().getBalance()
-                    + ")");
-          }
-        } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
-        }
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
+  private static void transfer(User user, User selectedUser, double transferAmount) {
+    if (selectedUser == null) {
+      JOptionPane.showMessageDialog(null, "Error: No recipient selected for the transfer.");
+      return;
     }
+
+    if (transferAmount <= 0) {
+      JOptionPane.showMessageDialog(null, "Invalid Action: Please enter a valid amount.");
+      return;
+    }
+
+    if (selectedUser.getCheckingAcc() == null) {
+      JOptionPane.showMessageDialog(null, "Error: The selected user does not have a checking account.");
+      return;
+    }
+
+    if (transferAmount > user.getCheckingAcc().getBalance()) {
+      JOptionPane.showMessageDialog(null, "Error: Insufficient funds! Available balance: $"
+          + user.getCheckingAcc().getBalance());
+      return;
+    }
+
+    Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
   }
 
   public static String formatTransactionHistory(User user) {
@@ -538,37 +519,37 @@ public class Bank {
     } while (option != 4);
   }
 
-  // menu 6
+  // Menu 6
   public static void transferOptions(Bank bank, User user) {
     int option;
     User selectedUser = null;
     double transferAmount = 0;
-    String msg = "";
+
     do {
-      msg = "Selected User: " + selectedUser + "\nAmount: " + transferAmount + "\n\nAvalaible Funds: "
-          + user.getCheckingAcc().getBalance();
+      String msg = "Selected User: " + (selectedUser != null ? selectedUser.getUserName() : "None")
+          + "\nAmount: " + (transferAmount > 0 ? transferAmount : "None")
+          + "\n\nAvailable Funds: " + user.getCheckingAcc().getBalance();
       option = JOptionPane.showOptionDialog(null, msg,
           "Account: (" + user.getUserName() + ") Choose an option:", 0, 0, null,
           transferOptions.values(), transferOptions.values()[0]);
+
       switch (option) {
         case 0:
           selectedUser = Transaction.selectTransferUser(user);
           break;
+
         case 1:
           transferAmount = Transaction.setTransferAmount(user);
           break;
+
         case 2:
-          if (transferAmount <= 0) {
-            JOptionPane.showMessageDialog(null, "Invalid Action, please enter valid amount");
-          } else {
-            Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
-          }
+          Bank.transfer(user, selectedUser, transferAmount);
           option = 3;
           break;
+
         case 3:
           break;
       }
-
     } while (option != 3);
   }
 

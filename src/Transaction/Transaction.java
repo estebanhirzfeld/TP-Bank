@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import Account.Account;
+import Bank.Bank;
 import User.User;
 
 public class Transaction {
@@ -167,14 +168,36 @@ public class Transaction {
   }
 
   public static double setTransferAmount(User user) {
-    double amount = Math.abs(Double.parseDouble(JOptionPane.showInputDialog("Input amount")));
+    double amount = 0;
 
-    if (amount > user.getCheckingAcc().getBalance()) {
-      JOptionPane.showMessageDialog(null, "Error. Insufficent funds!");
-      return 0;
-    } else {
-      return amount;
+    while (true) {
+      String input = JOptionPane.showInputDialog("Input amount:");
+
+      if (input == null) {
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to cancel the transfer?", "Cancel Transfer",
+            JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+          return 0;
+        }
+        continue;
+      }
+
+      if (input.trim().isEmpty() || !Bank.isNumeric(input)) {
+        JOptionPane.showMessageDialog(null, "Error: Please enter a valid numeric amount.");
+        continue;
+      }
+
+      amount = Math.abs(Double.parseDouble(input));
+
+      if (amount > user.getCheckingAcc().getBalance()) {
+        JOptionPane.showMessageDialog(null, "Error: Insufficient funds!");
+        continue;
+      }
+
+      break;
     }
+
+    return amount;
   }
 
   @Override
