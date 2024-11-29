@@ -1,5 +1,6 @@
 package Bank;
 
+import Account.Account;
 import Account.CheckingAcc;
 import Account.SavingsAcc;
 import Options.accTypeOptions;
@@ -97,32 +98,22 @@ public void withdraw(User user) {
     double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
     if (user.getCheckingAcc() != null) {
         Transaction.withdraw(user.getCheckingAcc(), amount);
-    } else {
-        JOptionPane.showMessageDialog(null, "No checking account found.");
     }
 }
 
 public void transfer(User user) {
   if (user.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
-      return;
   }
 
   User targetUser = Transaction.selectTransferUser(user);
+
   if (targetUser == null || targetUser.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-      return;
   }
 
-  double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
-  if (Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount)) {
-      JOptionPane.showMessageDialog(null, "Transfer successful.");
-  } else {
-      JOptionPane.showMessageDialog(null, "Transfer failed.");
-  }
+  Transaction.transfer(null, null, 0);
 }
-
-
 
   public void checkName() {
 
@@ -248,10 +239,13 @@ public void transfer(User user) {
           transferOptions(bank, user);
           break;
         case 3:
+        String msg = "Checking account balance: " + user.getCheckingAcc().getBalance() + "\n Savings account balance: " + user.getSavingsAcc().getBalance();
+        JOptionPane.showMessageDialog(null, msg);
           break;
+        case 4:
+        break;
       }
-
-    } while (option != 3);
+    } while (option != 4);
   }
 
   // menu 6
@@ -275,6 +269,8 @@ public void transfer(User user) {
         case 2:
           if(transferAmount <= 0) {
             JOptionPane.showMessageDialog(null, "Invalid Action, please enter valid amount");
+          } else{
+            Transaction.transfer(null, null, transferAmount);
           }
           break;
         case 3:

@@ -115,6 +115,7 @@ public static boolean transfer(Account source, Account target, double amount) {
     target.updateBalance(amount);
     source.getTransactionHistory().add(new Transaction(source,source.getAccNumber(),target.getAccNumber(),"transfer",amount));
     target.getTransactionHistory().add(new Transaction(source,source.getAccNumber(),target.getAccNumber(),"transfer",amount));
+    
     JOptionPane.showMessageDialog(null, "Successfully transfered "+ amount + "from account " + source.getAccNumber() + " to account " + target.getAccNumber());
     return true;
 } else {
