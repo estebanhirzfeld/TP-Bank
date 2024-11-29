@@ -303,6 +303,7 @@ public class Bank {
           } else {
             Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
           }
+          option = 3;
           break;
         case 3:
           break;
