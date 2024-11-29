@@ -2,6 +2,8 @@ package Transaction;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 import Account.Account;
@@ -14,22 +16,26 @@ public class Transaction {
   private String transType;
   private double amount;
   private LocalDate date;
-  private LinkedList<Transaction> transactions = new  LinkedList<Transaction>();
+  private double balanceAfter;
+  private LinkedList<Transaction> transactions = new LinkedList<Transaction>();
 
-  public Transaction(Account account, int sourceAcc,String transType, double amount) {
+  public Transaction(Account account, int sourceAcc, String transType, double amount, double balanceAfter) {
     this.account = account;
     this.sourceAcc = sourceAcc;
     this.transType = transType;
     this.amount = amount;
+    this.balanceAfter = balanceAfter;
     this.date = LocalDate.now();
   }
 
-  public Transaction(Account account, int sourceAcc, int targetAcc ,String transType, double amount){
+  public Transaction(Account account, int sourceAcc, int targetAcc, String transType, double amount,
+      double balanceAfter) {
     this.account = account;
     this.sourceAcc = sourceAcc;
     this.targetAcc = targetAcc;
     this.transType = transType;
     this.amount = amount;
+    this.balanceAfter = balanceAfter;
     this.date = LocalDate.now();
   }
 
@@ -89,48 +95,54 @@ public class Transaction {
     this.transactions = transactions;
   }
 
-public static void deposit(Account account, double amount) {
-  if (amount > 0) {
+  public static void deposit(Account account, double amount) {
+    if (amount > 0) {
       account.updateBalance(amount);
-      account.getTransactionHistory().add(new Transaction(account, account.getAccNumber(), "Deposit", amount));
+      account.getTransactionHistory()
+          .add(new Transaction(account, account.getAccNumber(), "Deposit", amount, account.getBalance()));
       JOptionPane.showMessageDialog(null, "Deposit successful. New balance: $" + account.getBalance());
-
-  } else {
+    } else {
       JOptionPane.showMessageDialog(null, "Error. Please enter a valid amount.");
-  }
-}
-
-public static void withdraw(Account account, double amount) {
-  if (amount > 0 && amount <= account.getBalance()) {
-    account.updateBalance(-amount);
-    account.getTransactionHistory().add(new Transaction(account, account.getAccNumber(), "Withdrawal", amount));
-    JOptionPane.showMessageDialog(null, "Withdrawal successful. New balance: $" + account.getBalance());
-} else {
-    JOptionPane.showMessageDialog(null, "Insufficient funds or invalid withdrawal amount.");
-}
-}
-
-public static boolean transfer(Account source, Account target, double amount) {
-
-  if (source == null || target == null) {
-    JOptionPane.showMessageDialog(null, "Source or target account cannot be null.");
-    return false;
+    }
   }
 
-  if (amount > 0 && amount <= source.getBalance()) {
-    source.updateBalance(-amount);
-    target.updateBalance(amount);
-    source.getTransactionHistory().add(new Transaction(source,source.getAccNumber(),target.getAccNumber(),"transfer",amount));
-    target.getTransactionHistory().add(new Transaction(source,source.getAccNumber(),target.getAccNumber(),"transfer",amount));
-    
-    JOptionPane.showMessageDialog(null, "Successfully transfered "+ amount + "from account " + source.getAccNumber() + " to account " + target.getAccNumber());
-    return true;
-} else {
-    JOptionPane.showMessageDialog(null, "Transfer failed due to insufficient funds or invalid amount.");
-    return false;
-    
-}
-}
+  public static void withdraw(Account account, double amount) {
+    if (amount > 0 && amount <= account.getBalance()) {
+      account.updateBalance(-amount);
+      account.getTransactionHistory()
+          .add(new Transaction(account, account.getAccNumber(), "Withdrawal", amount, account.getBalance()));
+      JOptionPane.showMessageDialog(null, "Withdrawal successful. New balance: $" + account.getBalance());
+    } else {
+      JOptionPane.showMessageDialog(null, "Insufficient funds or invalid withdrawal amount.");
+    }
+  }
+
+  public static boolean transfer(Account source, Account target, double amount) {
+
+    if (source == null || target == null) {
+      JOptionPane.showMessageDialog(null, "Source or target account cannot be null.");
+      return false;
+    }
+
+    if (amount > 0 && amount <= source.getBalance()) {
+      source.updateBalance(-amount);
+      target.updateBalance(amount);
+      source.getTransactionHistory()
+          .add(new Transaction(source, source.getAccNumber(), target.getAccNumber(), "Transfer", -amount,
+              source.getBalance()));
+      target.getTransactionHistory()
+          .add(new Transaction(source, source.getAccNumber(), target.getAccNumber(), "Transfer", amount,
+              target.getBalance()));
+
+      JOptionPane.showMessageDialog(null, "Successfully transfered " + amount + " from account " + source.getAccNumber()
+          + " to account " + target.getAccNumber());
+      return true;
+    } else {
+      JOptionPane.showMessageDialog(null, "Transfer failed due to insufficient funds or invalid amount.");
+      return false;
+
+    }
+  }
 
   public static User selectTransferUser(User user) {
     LinkedList<User> userList = User.getUsers();
@@ -142,7 +154,8 @@ public static boolean transfer(Account source, Account target, double amount) {
 
     User[] userArray = userList.toArray(new User[0]);
 
-    Object selectedUser = JOptionPane.showInputDialog(null,"Select a user:","Hiru Bank",JOptionPane.INFORMATION_MESSAGE,null,userArray,userArray[0]);
+    Object selectedUser = JOptionPane.showInputDialog(null, "Select a user:", "Hiru Bank",
+        JOptionPane.INFORMATION_MESSAGE, null, userArray, userArray[0]);
 
     if (selectedUser != null) {
       User selected = (User) selectedUser;
@@ -164,13 +177,10 @@ public static boolean transfer(Account source, Account target, double amount) {
     }
   }
 
-
-
   @Override
   public String toString() {
-    return "Transaction [account=" + account + ", transType=" + transType + ", amount=" + amount + ", date=" + date
-        + ", transactions=" + transactions + "]";
+    String amountFormatted = (amount < 0 ? "-$" : "+$") + Math.abs(amount);
+    return String.format("Account: %s | Type: %s | Amount: %s | Date: %s | Balance after: $%.2f",
+        account.getAccNumber(), transType, amountFormatted, date, balanceAfter);
   }
-
-  
 }

@@ -12,6 +12,8 @@ import Options.userOptions;
 import Transaction.Transaction;
 import User.User;
 import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 public class Bank {
@@ -118,19 +120,19 @@ public class Bank {
   public void deposit(User user) {
     double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
     if (user.getCheckingAcc() != null) {
-        Transaction.deposit(user.getCheckingAcc(), amount);
+      Transaction.deposit(user.getCheckingAcc(), amount);
     }
-}
+  }
 
-public void withdraw(User user) {
+  public void withdraw(User user) {
     double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
     if (user.getCheckingAcc() != null) {
-        Transaction.withdraw(user.getCheckingAcc(), amount);
+      Transaction.withdraw(user.getCheckingAcc(), amount);
     }
-}
+  }
 
-public void transfer(User user) {
-  double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+  public void transfer(User user) {
+    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
 
     if (user.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
@@ -147,6 +149,30 @@ public void transfer(User user) {
 
   public void checkName() {
 
+  }
+
+    public static String formatTransactionHistory(User user) {
+    StringBuilder msg = new StringBuilder();
+
+    if (user != null && user.getCheckingAcc() != null) {
+      msg.append("Transaction History for Account: ")
+          .append(user.getCheckingAcc().getAccNumber())
+          .append("\n\n");
+
+      List<Transaction> transactions = user.getCheckingAcc().getTransactionHistory();
+
+      if (transactions != null && !transactions.isEmpty()) {
+        for (Transaction transaction : transactions) {
+          msg.append(transaction.toString()).append("\n");
+        }
+      } else {
+        msg.append("No transactions recorded yet.\n");
+      }
+    } else {
+      msg.append("User or account information is missing.\n");
+    }
+
+    return msg.toString();
   }
 
   // menu
@@ -258,8 +284,8 @@ public void transfer(User user) {
   public static void transOptions(Bank bank, User user) {
     int option;
     do {
-      option = JOptionPane.showOptionDialog(null, "Choose an option:",
-          "Account: (" + user.getUserName() + ")", 0, 0, null,
+      option = JOptionPane.showOptionDialog(null, formatTransactionHistory(user) ,
+          "Account: (" + user.getUserName() + ") Choose an option:", 0, 0, null,
           transOptions.values(), transOptions.values()[0]);
       switch (option) {
         case 0:
@@ -272,11 +298,12 @@ public void transfer(User user) {
           transferOptions(bank, user);
           break;
         case 3:
-        String msg = "Checking account balance: " + user.getCheckingAcc().getBalance() + "\n Savings account balance: " + user.getSavingsAcc().getBalance();
-        JOptionPane.showMessageDialog(null, msg);
+          String msg = "Checking account balance: " + user.getCheckingAcc().getBalance()
+              + "\n Savings account balance: " + user.getSavingsAcc().getBalance();
+          JOptionPane.showMessageDialog(null, msg);
           break;
         case 4:
-        break;
+          break;
       }
     } while (option != 4);
   }
@@ -286,11 +313,12 @@ public void transfer(User user) {
     int option;
     User selectedUser = null;
     double transferAmount = 0;
-    String msg = "Selected User: " + selectedUser + "\nAmount: " + transferAmount + "\n\nAvalaible Funds: " + user.getCheckingAcc().getBalance() + "\n Choose an option:";
+    String msg = "";
     do {
-      msg = "Selected User: " + selectedUser + "\n Amount: " + transferAmount;
+      msg = "Selected User: " + selectedUser + "\nAmount: " + transferAmount + "\n\nAvalaible Funds: "
+          + user.getCheckingAcc().getBalance();
       option = JOptionPane.showOptionDialog(null, msg,
-          "Account: (" + user.getUserName() + ")", 0, 0, null,
+          "Account: (" + user.getUserName() + ") Choose an option:", 0, 0, null,
           transferOptions.values(), transferOptions.values()[0]);
       switch (option) {
         case 0:
@@ -300,9 +328,9 @@ public void transfer(User user) {
           transferAmount = Transaction.setTransferAmount(user);
           break;
         case 2:
-          if(transferAmount <= 0) {
+          if (transferAmount <= 0) {
             JOptionPane.showMessageDialog(null, "Invalid Action, please enter valid amount");
-          } else{
+          } else {
             Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
           }
           break;
