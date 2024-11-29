@@ -312,7 +312,7 @@ public void modUserId(User user) {
           break;
         case 3:
           bank.deleteUser(user);
-          option = 4;
+          option = 5;
           break;
         case 4:
           // historial de la cuenta
