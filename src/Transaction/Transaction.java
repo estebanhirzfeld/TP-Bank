@@ -94,6 +94,7 @@ public static void deposit(Account account, double amount) {
       account.updateBalance(amount);
       account.getTransactionHistory().add(new Transaction(account, account.getAccNumber(), "Deposit", amount));
       JOptionPane.showMessageDialog(null, "Deposit successful. New balance: $" + account.getBalance());
+
   } else {
       JOptionPane.showMessageDialog(null, "Error. Please enter a valid amount.");
   }
