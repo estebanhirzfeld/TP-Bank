@@ -178,7 +178,8 @@ public class Bank {
     while (true) {
       String input = JOptionPane.showInputDialog("Enter your account number:");
 
-      if (input == null) {
+      if (input == null || input.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "ERROR: Account number cannot be blank. Please try again.");
         int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel",
             JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
@@ -189,11 +190,11 @@ public class Bank {
 
       if (isNumeric(input)) {
         accNumber = Integer.parseInt(input);
-        // accNumber >= 2 && accNumber <= 20
-        if (accNumber < 2 || accNumber > 20) {
+
+        if (accNumber >= 2 && accNumber <= 20) {
           break;
         } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid account number between 3 and 20.");
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid account number between 2 and 20.");
         }
       } else {
         JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric account number.");
