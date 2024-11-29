@@ -92,10 +92,15 @@ public class Bank {
         continue;
       }
 
+      if (input.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "ERROR: ID cannot be empty. Please try again.");
+        continue;
+      }
+
       if (isNumeric(input)) {
         id = Integer.parseInt(input);
 
-        if (id < 5 || id > 250) {
+        if (id >= 5 && id <= 250) {
           break;
         } else {
           JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
@@ -117,7 +122,7 @@ public class Bank {
   }
 
   public void modUserId(User user) {
-    int newUserId = getValidUserId(); // Obtener el ID válido o -1 si se canceló.
+    int newUserId = getValidUserId();
 
     if (newUserId == -1) {
       return;
@@ -137,13 +142,15 @@ public class Bank {
 
     String username = JOptionPane.showInputDialog("Enter your username:");
 
-    if (username == null) {
+    if (username == null || username.trim().isEmpty()) {
+      JOptionPane.showMessageDialog(null, "ERROR: Username cannot be empty. Please try again.");
       return null;
     }
 
     String idInput = JOptionPane.showInputDialog("Enter your user ID:");
 
-    if (idInput == null) {
+    if (idInput == null || idInput.trim().isEmpty()) {
+      JOptionPane.showMessageDialog(null, "ERROR: User ID cannot be empty. Please try again.");
       return null;
     }
 
@@ -163,7 +170,6 @@ public class Bank {
 
     JOptionPane.showMessageDialog(null, "Error. User not found.");
     return null;
-
   }
 
   private int getValidAccountNumber() {
