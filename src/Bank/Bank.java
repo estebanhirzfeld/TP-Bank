@@ -232,14 +232,14 @@ public class Bank {
 
   public void withdraw(User user) {
     double amount;
-    
+
     if (user.getCheckingAcc() != null) {
       do {
         amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
-        if (amount > 0) {
+        if (amount > 0 && amount<user.getCheckingAcc().getBalance()) {
           break;
         } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero and less than your actual balance.");
         }
       } while (true);
       JOptionPane.showMessageDialog(null, "Withdrawal successful! Amount: " + amount);
@@ -346,16 +346,12 @@ public class Bank {
           break;
         case 3:
           bank.deleteUser(user);
-          option = 5;
           break;
         case 4:
-          // historial de la cuenta
-          break;
-        case 5:
           break;
       }
 
-    } while (option != 5);
+    } while (option != 4);
   }
 
   // menu 3
