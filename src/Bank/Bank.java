@@ -8,6 +8,7 @@ import Options.loggedOptions;
 import Options.transOptions;
 import Options.transferOptions;
 import Options.userOptions;
+import Transaction.Transaction;
 import User.User;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
@@ -81,56 +82,47 @@ public class Bank {
       user.setCheckingAcc(newUserCheckingAcc);
       newUserCheckingAcc.setUser(user);
     }
-
   }
 
   public void deposit(User user) {
-    JOptionPane.showMessageDialog(null, "Deposit function");
-
-  }
-
-  public void withdraw(User user) {
-    JOptionPane.showMessageDialog(null, "withdraw function");
-  }
-
-  public User selectTransferUser(User user) {
-    LinkedList<User> userList = User.getUsers();
-
-    if (userList.isEmpty()) {
-      JOptionPane.showMessageDialog(null, "No users available to transfer.");
-      return null;
-    }
-
-    User[] userArray = userList.toArray(new User[0]);
-
-    Object selectedUser = JOptionPane.showInputDialog(
-        null,
-        "Select a user:",
-        "Hiru Bank",
-        JOptionPane.INFORMATION_MESSAGE,
-        null,
-        userArray,
-        userArray[0]);
-
-    if (selectedUser != null) {
-      User selected = (User) selectedUser;
-      return selected;
+    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+    if (user.getCheckingAcc() != null) {
+        Transaction.deposit(user.getCheckingAcc(), amount);
     } else {
-      JOptionPane.showMessageDialog(null, "No user selected.");
-      return null;
+        JOptionPane.showMessageDialog(null, "No checking account found.");
     }
-  }
+}
 
-  public double setTransferAmount(User user) {
-    double amount = Math.abs(Double.parseDouble(JOptionPane.showInputDialog("Input amount")));
-
-    if (amount > user.getCheckingAcc().getBalance()) {
-      JOptionPane.showMessageDialog(null, "Insufficent funds!");
-      return 0;
+public void withdraw(User user) {
+    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
+    if (user.getCheckingAcc() != null) {
+        Transaction.withdraw(user.getCheckingAcc(), amount);
     } else {
-      return amount;
+        JOptionPane.showMessageDialog(null, "No checking account found.");
     }
+}
+
+public void transfer(User user) {
+  if (user.getCheckingAcc() == null) {
+      JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
+      return;
   }
+
+  User targetUser = Transaction.selectTransferUser(user);
+  if (targetUser == null || targetUser.getCheckingAcc() == null) {
+      JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
+      return;
+  }
+
+  double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+  if (Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount)) {
+      JOptionPane.showMessageDialog(null, "Transfer successful.");
+  } else {
+      JOptionPane.showMessageDialog(null, "Transfer failed.");
+  }
+}
+
+
 
   public void checkName() {
 
@@ -275,10 +267,10 @@ public class Bank {
           transferOptions.values(), transferOptions.values()[0]);
       switch (option) {
         case 0:
-          selectedUser = bank.selectTransferUser(user);
+          selectedUser = Transaction.selectTransferUser(user);
           break;
         case 1:
-          transferAmount = bank.setTransferAmount(user);
+          transferAmount = Transaction.setTransferAmount(user);
           break;
         case 2:
           if(transferAmount <= 0) {
