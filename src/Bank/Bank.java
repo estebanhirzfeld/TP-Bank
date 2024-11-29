@@ -196,10 +196,13 @@ public class Bank {
           option = 4;
           break;
         case 4:
+        //historial de la cuenta
+          break;
+        case 5:
           break;
       }
 
-    } while (option != 4);
+    } while (option != 5);
   }
 
   // menu 3
