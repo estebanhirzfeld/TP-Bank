@@ -341,28 +341,35 @@ public class Bank {
 
   private static void transfer(User user, User selectedUser, double transferAmount) {
     if (selectedUser == null) {
-      JOptionPane.showMessageDialog(null, "Error: No recipient selected for the transfer.");
-      return;
+        JOptionPane.showMessageDialog(null, "Error: No recipient selected for the transfer.");
+        return;
+    }
+
+    if (user.equals(selectedUser)) {
+        JOptionPane.showMessageDialog(null, "Error: You cannot transfer funds to your own account.");
+        return;
     }
 
     if (transferAmount <= 0) {
-      JOptionPane.showMessageDialog(null, "Invalid Action: Please enter a valid amount.");
-      return;
+        JOptionPane.showMessageDialog(null, "Invalid Action: Please enter a valid amount.");
+        return;
     }
 
     if (selectedUser.getCheckingAcc() == null) {
-      JOptionPane.showMessageDialog(null, "Error: The selected user does not have a checking account.");
-      return;
+        JOptionPane.showMessageDialog(null, "Error: The selected user does not have a checking account.");
+        return;
     }
 
     if (transferAmount > user.getCheckingAcc().getBalance()) {
-      JOptionPane.showMessageDialog(null, "Error: Insufficient funds! Available balance: $"
-          + user.getCheckingAcc().getBalance());
-      return;
+        JOptionPane.showMessageDialog(null, "Error: Insufficient funds! Available balance: $"
+                + user.getCheckingAcc().getBalance());
+        return;
     }
 
     Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
-  }
+    JOptionPane.showMessageDialog(null, "Transfer successful! Amount: $" + transferAmount);
+}
+
 
   public static String formatTransactionHistory(User user) {
     StringBuilder msg = new StringBuilder();
