@@ -520,7 +520,16 @@ public class Bank {
         // String msg = "Checking account balance: " + user.getCheckingAcc().getBalance()
         // + "\n" + savingsBalanceMessage;
         // JOptionPane.showMessageDialog(null, msg);
+          case 3:
+          String savingsBalanceMessage = (user.getSavingsAcc() != null) 
+              ? "Savings account balance: " + user.getSavingsAcc().getBalance() 
+              : "No savings account.";
+      
+          String msg = "Checking account balance: " + user.getCheckingAcc().getBalance()
+              + "\n" + savingsBalanceMessage;
+          JOptionPane.showMessageDialog(null, msg);
           break;
+      
         case 4:
           break;
       }
