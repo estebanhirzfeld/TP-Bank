@@ -92,10 +92,10 @@ private int getValidUserId() {
       if (isNumeric(input)) {
           id = Integer.parseInt(input);
 
-          if (id >= 10 && id <= 250) {
+          if (id < 5 || id > 250) {
               break;
           } else {
-              JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
+              JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
           }
       } else {
           JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
