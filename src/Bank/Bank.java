@@ -132,10 +132,53 @@ public class Bank {
     JOptionPane.showMessageDialog(null, "ID modified successfully");
   }
 
-  public void deleteUser(User user) {
+  public Boolean deleteUser(User user) {
+
+    int confirmation = JOptionPane.showConfirmDialog(null,
+        "Are you sure you want to delete your account?",
+        "Confirm Deletion",
+        JOptionPane.YES_NO_OPTION);
+
+    if (confirmation != JOptionPane.YES_OPTION) {
+      JOptionPane.showMessageDialog(null, "Account deletion canceled.");
+      return false;
+    }
+
+    boolean hasBalance = false;
+    double checkingBalance = 0;
+    double savingsBalance = 0;
+
+    if (user.getCheckingAcc() != null) {
+      checkingBalance = user.getCheckingAcc().getBalance();
+      if (checkingBalance > 0) {
+        hasBalance = true;
+      }
+    }
+
+    if (user.getSavingsAcc() != null) {
+      savingsBalance = user.getSavingsAcc().getBalance();
+      if (savingsBalance > 0) {
+        hasBalance = true;
+      }
+    }
+
+    if (hasBalance) {
+      double totalBalance = checkingBalance + savingsBalance;
+      int donateChoice = JOptionPane.showConfirmDialog(null,
+          "You have a balance of $" + totalBalance + " in your account. \n" +
+              "Would you like to donate it to charity?",
+          "Balance Detected",
+          JOptionPane.OK_CANCEL_OPTION);
+
+      if (donateChoice != JOptionPane.OK_OPTION) {
+        JOptionPane.showMessageDialog(null, "Account deletion canceled.");
+        return false;
+      }
+    }
+
     User.deleteUser(user);
     JOptionPane.showMessageDialog(null, "User deleted successfully.");
-    user = null;
+    return true;
   }
 
   public User login() {
@@ -371,7 +414,9 @@ public class Bank {
           userOptions(bank, user);
           break;
         case 3:
-          bank.deleteUser(user);
+          if (bank.deleteUser(user)) {
+            option = 4;
+          }
           break;
         case 4:
           break;
