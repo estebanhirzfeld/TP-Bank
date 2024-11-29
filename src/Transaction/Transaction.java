@@ -100,7 +100,7 @@ public class Transaction {
       account.updateBalance(amount);
       account.getTransactionHistory()
           .add(new Transaction(account, account.getAccNumber(), "Deposit", amount, account.getBalance()));
-      JOptionPane.showMessageDialog(null, "Deposit successful. New balance: $" + account.getBalance());
+      JOptionPane.showMessageDialog(null, "New balance: $" + account.getBalance());
     } else {
       JOptionPane.showMessageDialog(null, "Error. Please enter a valid amount.");
     }
@@ -111,7 +111,7 @@ public class Transaction {
       account.updateBalance(-amount);
       account.getTransactionHistory()
           .add(new Transaction(account, account.getAccNumber(), "Withdrawal", amount, account.getBalance()));
-      JOptionPane.showMessageDialog(null, "Withdrawal successful. New balance: $" + account.getBalance());
+      JOptionPane.showMessageDialog(null, "New balance: $" + account.getBalance());
     } else {
       JOptionPane.showMessageDialog(null, "Insufficient funds or invalid withdrawal amount.");
     }

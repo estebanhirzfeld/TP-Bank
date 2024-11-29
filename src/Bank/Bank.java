@@ -165,17 +165,16 @@ public class Bank {
 
       if (isNumeric(input)) {
         accNumber = Integer.parseInt(input);
-
-        if (accNumber >= 2 && accNumber <= 20) {
+        // accNumber >= 2 && accNumber <= 20 
+        if (accNumber < 2 || accNumber > 20) {
           break;
         } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid account number between 2 and 20.");
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid account number between 3 and 20.");
         }
       } else {
         JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric account number.");
       }
     }
-
     return accNumber;
   }
 
@@ -184,7 +183,6 @@ public class Bank {
       int accNumber = getValidAccountNumber();
 
       if (accNumber == -1) {
-
         return;
       }
 
@@ -233,17 +231,18 @@ public class Bank {
   }
 
   public void withdraw(User user) {
-    double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
+    double amount;
+    
     if (user.getCheckingAcc() != null) {
       do {
-        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
         if (amount > 0) {
           break;
         } else {
           JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
         }
       } while (true);
-      JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+      JOptionPane.showMessageDialog(null, "Withdrawal successful! Amount: " + amount);
       Transaction.withdraw(user.getCheckingAcc(), amount);
     } else {
       JOptionPane.showMessageDialog(null, "ERROR.");
