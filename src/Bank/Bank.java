@@ -95,11 +95,11 @@ public class Bank {
       if (isNumeric(input)) {
         id = Integer.parseInt(input);
 
-          if (id < 5 || id > 250) {
-              break;
-          } else {
-              JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
-          }
+        if (id < 5 || id > 250) {
+          break;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
+        }
       } else {
         JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
       }
@@ -134,8 +134,25 @@ public class Bank {
   }
 
   public User login() {
+
     String username = JOptionPane.showInputDialog("Enter your username:");
-    int id = Integer.parseInt(JOptionPane.showInputDialog("Enter your user ID:"));
+
+    if (username == null) {
+      return null;
+    }
+
+    String idInput = JOptionPane.showInputDialog("Enter your user ID:");
+
+    if (idInput == null) {
+      return null;
+    }
+
+    if (!isNumeric(idInput)) {
+      JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid numeric ID.");
+      return null;
+    }
+
+    int id = Integer.parseInt(idInput);
 
     for (User user : User.getUsers()) {
       if (user.getUserName().equals(username) && user.getId() == id) {
@@ -146,6 +163,7 @@ public class Bank {
 
     JOptionPane.showMessageDialog(null, "Error. User not found.");
     return null;
+
   }
 
   private int getValidAccountNumber() {
@@ -165,7 +183,7 @@ public class Bank {
 
       if (isNumeric(input)) {
         accNumber = Integer.parseInt(input);
-        // accNumber >= 2 && accNumber <= 20 
+        // accNumber >= 2 && accNumber <= 20
         if (accNumber < 2 || accNumber > 20) {
           break;
         } else {
@@ -236,10 +254,11 @@ public class Bank {
     if (user.getCheckingAcc() != null) {
       do {
         amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
-        if (amount > 0 && amount<user.getCheckingAcc().getBalance()) {
+        if (amount > 0 && amount < user.getCheckingAcc().getBalance()) {
           break;
         } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero and less than your actual balance.");
+          JOptionPane.showMessageDialog(null,
+              "ERROR: Amount must be greater than zero and less than your actual balance.");
         }
       } while (true);
       JOptionPane.showMessageDialog(null, "Withdrawal successful! Amount: " + amount);
