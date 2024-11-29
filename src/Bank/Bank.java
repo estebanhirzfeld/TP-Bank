@@ -515,11 +515,6 @@ public class Bank {
         case 2:
           transferOptions(bank, user);
           break;
-        case 3:
-        // String savingsBalanceMessage = (user.getSavingsAcc() != null) ? "Savings account balance: " + user.getSavingsAcc().getBalance() : "No savings account opened yet.";
-        // String msg = "Checking account balance: " + user.getCheckingAcc().getBalance()
-        // + "\n" + savingsBalanceMessage;
-        // JOptionPane.showMessageDialog(null, msg);
           case 3:
           String savingsBalanceMessage = (user.getSavingsAcc() != null) 
               ? "Savings account balance: " + user.getSavingsAcc().getBalance() 
