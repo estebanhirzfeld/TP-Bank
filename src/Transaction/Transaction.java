@@ -110,6 +110,12 @@ public static void withdraw(Account account, double amount) {
 }
 
 public static boolean transfer(Account source, Account target, double amount) {
+
+  if (source == null || target == null) {
+    JOptionPane.showMessageDialog(null, "Source or target account cannot be null.");
+    return false;
+  }
+
   if (amount > 0 && amount <= source.getBalance()) {
     source.updateBalance(-amount);
     target.updateBalance(amount);
@@ -121,6 +127,7 @@ public static boolean transfer(Account source, Account target, double amount) {
 } else {
     JOptionPane.showMessageDialog(null, "Transfer failed due to insufficient funds or invalid amount.");
     return false;
+    
 }
 }
 
@@ -134,14 +141,7 @@ public static boolean transfer(Account source, Account target, double amount) {
 
     User[] userArray = userList.toArray(new User[0]);
 
-    Object selectedUser = JOptionPane.showInputDialog(
-        null,
-        "Select a user:",
-        "Hiru Bank",
-        JOptionPane.INFORMATION_MESSAGE,
-        null,
-        userArray,
-        userArray[0]);
+    Object selectedUser = JOptionPane.showInputDialog(null,"Select a user:","Hiru Bank",JOptionPane.INFORMATION_MESSAGE,null,userArray,userArray[0]);
 
     if (selectedUser != null) {
       User selected = (User) selectedUser;

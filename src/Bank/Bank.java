@@ -89,8 +89,6 @@ public class Bank {
     double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
     if (user.getCheckingAcc() != null) {
         Transaction.deposit(user.getCheckingAcc(), amount);
-    } else {
-        JOptionPane.showMessageDialog(null, "No checking account found.");
     }
 }
 
@@ -102,18 +100,20 @@ public void withdraw(User user) {
 }
 
 public void transfer(User user) {
-  if (user.getCheckingAcc() == null) {
+  double amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+
+    if (user.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
-  }
+    }
 
-  User targetUser = Transaction.selectTransferUser(user);
+    User targetUser = Transaction.selectTransferUser(user);
 
-  if (targetUser == null || targetUser.getCheckingAcc() == null) {
+    if (targetUser == null || targetUser.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-  }
+    }
 
-  Transaction.transfer(null, null, 0);
-}
+    Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
+  }
 
   public void checkName() {
 
@@ -270,7 +270,7 @@ public void transfer(User user) {
           if(transferAmount <= 0) {
             JOptionPane.showMessageDialog(null, "Invalid Action, please enter valid amount");
           } else{
-            Transaction.transfer(null, null, transferAmount);
+            Transaction.transfer(user.getCheckingAcc(), selectedUser.getCheckingAcc(), transferAmount);
           }
           break;
         case 3:
