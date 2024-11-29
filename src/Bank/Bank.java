@@ -100,11 +100,6 @@ public class Bank {
           } else {
               JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
           }
-        if (id >= 10 && id <= 250) {
-          break;
-        } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
-        }
       } else {
         JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
       }
