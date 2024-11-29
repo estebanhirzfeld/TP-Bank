@@ -30,100 +30,107 @@ public class Bank {
 
   public static boolean isNumeric(String str) {
     for (char c : str.toCharArray()) {
-        if (!Character.isDigit(c)) {
-            return false;
-        }
+      if (!Character.isDigit(c)) {
+        return false;
+      }
     }
     return true;
-}
-
-public void addUser() {
-  String userName = getValidUserName();
-  if (userName == null) { 
-      return; 
   }
 
-  int id = getValidUserId();
-  if (id == -1) { 
-      return; 
+  public void addUser() {
+    String userName = getValidUserName();
+    if (userName == null) {
+      return;
+    }
+
+    int id = getValidUserId();
+    if (id == -1) {
+      return;
+    }
+
+    // Add user and confirm
+    User.addUser(userName, id);
+    JOptionPane.showMessageDialog(null, "User added successfully");
   }
 
-  // Add user and confirm
-  User.addUser(userName, id);
-  JOptionPane.showMessageDialog(null, "User added successfully");
-}
-private String getValidUserName() {
-  String userName;
+  private String getValidUserName() {
+    String userName;
 
-  while (true) {
+    while (true) {
       userName = JOptionPane.showInputDialog("Enter user name:");
 
       if (userName == null) {
-          int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
-          if (choice == JOptionPane.YES_OPTION) {
-              return null; 
-          }
-          continue; 
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel",
+            JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+          return null;
+        }
+        continue;
       }
 
       if (userName.trim().isEmpty() || !userName.matches("[a-zA-Z]+") || userName.length() < 3) {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name with at least 3 letters. Try again.");
+        JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name with at least 3 letters. Try again.");
       } else {
-          break; 
+        break;
       }
+    }
+    return userName;
   }
-  return userName;
-}
 
-private int getValidUserId() {
-  int id;
+  private int getValidUserId() {
+    int id;
 
-  while (true) {
+    while (true) {
       String input = JOptionPane.showInputDialog("Enter user ID:");
 
       if (input == null) {
-          int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
-          if (choice == JOptionPane.YES_OPTION) {
-              return -1;
-          }
-          continue;
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel",
+            JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+          return -1;
+        }
+        continue;
       }
 
       if (isNumeric(input)) {
-          id = Integer.parseInt(input);
+        id = Integer.parseInt(input);
 
           if (id < 5 || id > 250) {
               break;
           } else {
               JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 5 and 250.");
           }
+        if (id >= 10 && id <= 250) {
+          break;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
+        }
       } else {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
+        JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
       }
+    }
+    return id;
   }
-  return id;
-}
 
+  public void modUserName(User user) {
+    String newUserName = getValidUserName();
 
-public void modUserName(User user) {
-  String newUserName = getValidUserName(); 
-
-  if (newUserName != null) {  
+    if (newUserName != null) {
       user.setUserName(newUserName);
       JOptionPane.showMessageDialog(null, "User modified successfully");
-  }
-}
-
-public void modUserId(User user) {
-  int newUserId = getValidUserId(); // Obtener el ID válido o -1 si se canceló.
-
-  if (newUserId == -1) {
-      return; 
+    }
   }
 
-  user.setId(newUserId); 
-  JOptionPane.showMessageDialog(null, "ID modified successfully");
-}
+  public void modUserId(User user) {
+    int newUserId = getValidUserId(); // Obtener el ID válido o -1 si se canceló.
+
+    if (newUserId == -1) {
+      return;
+    }
+
+    user.setId(newUserId);
+    JOptionPane.showMessageDialog(null, "ID modified successfully");
+  }
 
   public void deleteUser(User user) {
     User.deleteUser(user);
@@ -146,35 +153,68 @@ public void modUserId(User user) {
     return null;
   }
 
+  private int getValidAccountNumber() {
+    int accNumber = -1;
+
+    while (true) {
+      String input = JOptionPane.showInputDialog("Enter your account number:");
+
+      if (input == null) {
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel",
+            JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+          return -1;
+        }
+        continue;
+      }
+
+      if (isNumeric(input)) {
+        accNumber = Integer.parseInt(input);
+
+        if (accNumber >= 2 && accNumber <= 20) {
+          break;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid account number between 2 and 20.");
+        }
+      } else {
+        JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric account number.");
+      }
+    }
+
+    return accNumber;
+  }
+
+  public void addCheckingAcc(User user) {
+    if (user.getCheckingAcc() == null) {
+      int accNumber = getValidAccountNumber();
+
+      if (accNumber == -1) {
+
+        return;
+      }
+
+      CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
+      user.setCheckingAcc(newUserCheckingAcc);
+      newUserCheckingAcc.setUser(user);
+
+      JOptionPane.showMessageDialog(null, "Checking account added successfully.");
+    }
+  }
+
   public void addSavingsAcc(User user) {
     if (user.getSavingsAcc() == null) {
-      int accNumber;
+      int accNumber = getValidAccountNumber();
 
-      do {
-        accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
-      } while (accNumber >= 2 && accNumber <= 20);
+      if (accNumber == -1) {
+
+        return;
+      }
 
       SavingsAcc newUserSavingsAcc = new SavingsAcc(user, name, accNumber, 0);
       user.setSavingsAcc(newUserSavingsAcc);
       newUserSavingsAcc.setUser(user);
-    }
-  }
 
-  public void addCheckingAcc(User user) {
-
-    if (user.getCheckingAcc() == null) {
-      int accNumber;
-
-      do {
-        accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
-        CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
-        if (accNumber < 2 || accNumber > 20) {
-          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
-        } else {
-          user.setCheckingAcc(newUserCheckingAcc);
-          newUserCheckingAcc.setUser(user);
-        }
-      } while (accNumber >= 2 && accNumber <= 20);
+      JOptionPane.showMessageDialog(null, "Savings account added successfully.");
     }
   }
 
