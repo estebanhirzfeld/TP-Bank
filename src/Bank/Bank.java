@@ -30,14 +30,44 @@ public class Bank {
   }
 
   public void addUser() {
-    String userName = JOptionPane.showInputDialog("Enter user name:");
-    int id = Integer.parseInt(JOptionPane.showInputDialog("Enter user ID:"));
+
+    String userName;
+		
+		do{
+			userName  = JOptionPane.showInputDialog("Enter user name:");
+			
+			if(userName.isEmpty() || userName.equals("") || !userName.matches("[a-z]+") || userName.length()<3){
+				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
+			}
+		}while(userName.isEmpty() || userName.equals("") || !userName.matches("[a-zA-Z]+"));
+
+    int id;
+
+    do {
+      id = Integer.parseInt(JOptionPane.showInputDialog("Enter user ID:"));
+
+			if (id<10||id>250) {
+				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid id. Try again.");
+			}
+		} while (id<10||id>250);
+
     User.addUser(userName, id);
     JOptionPane.showMessageDialog(null, "User added successfully");
   }
 
+
   public void modUserName(User user) {
-    String newUserName = JOptionPane.showInputDialog("Enter new user name:");
+
+    String newUserName;
+		
+		do{
+      newUserName = JOptionPane.showInputDialog("Enter new user name:");
+			
+			if(newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-z]+") || newUserName.length()<3){
+				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
+			}
+		}while(newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-zA-Z]+"));
+
     user.setUserName(newUserName);
   }
 
