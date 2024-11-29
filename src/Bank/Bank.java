@@ -1,6 +1,5 @@
 package Bank;
 
-import Account.Account;
 import Account.CheckingAcc;
 import Account.SavingsAcc;
 import Options.accTypeOptions;
@@ -11,9 +10,7 @@ import Options.transferOptions;
 import Options.userOptions;
 import Transaction.Transaction;
 import User.User;
-import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.JOptionPane;
 
 public class Bank {
@@ -31,45 +28,82 @@ public class Bank {
     this.name = name;
   }
 
-  public void addUser() {
+  public static boolean isNumeric(String str) {
+    for (char c : str.toCharArray()) {
+        if (!Character.isDigit(c)) {
+            return false;
+        }
+    }
+    return true;
+}
 
+public void addUser() {
     String userName;
-		
-		do{
-			userName  = JOptionPane.showInputDialog("Enter user name:");
-			
-			if(userName.isEmpty() || userName.equals("") || !userName.matches("[a-z]+") || userName.length()<3){
-				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
-			}
-		}while(userName.isEmpty() || userName.equals("") || !userName.matches("[a-zA-Z]+"));
+
+    
+    while (true) {
+        userName = JOptionPane.showInputDialog("Enter user name:");
+
+        if (userName == null) {
+            int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                return; 
+            }
+            continue; 
+        }
+
+        if (userName.trim().isEmpty() || !userName.matches("[a-zA-Z]+") || userName.length() < 3) {
+            JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name with at least 3 letters. Try again.");
+        } else {
+            break; 
+        }
+    }
 
     int id;
 
-    do {
-      id = Integer.parseInt(JOptionPane.showInputDialog("Enter user ID:"));
+    
+    while (true) {
+        String input = JOptionPane.showInputDialog("Enter user ID:");
 
-			if (id<10||id>250) {
-				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid id. Try again.");
-			}
-		} while (id<10||id>250);
+        if (input == null) {
+            int choice = JOptionPane.showConfirmDialog(null, "Do you want to go back?", "Cancel", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                return; 
+            }
+            continue; 
+        }
 
+        if (isNumeric(input)) {
+            id = Integer.parseInt(input);
+
+            if (id >= 10 && id <= 250) {
+                break; 
+            } else {
+                JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID between 10 and 250.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "ERROR: Please enter a numeric ID.");
+        }
+    }
+
+    // Agregar usuario y confirmar.
     User.addUser(userName, id);
     JOptionPane.showMessageDialog(null, "User added successfully");
-
-  }
+}
 
 
   public void modUserName(User user) {
 
     String newUserName;
-		
-		do{
+
+    do {
       newUserName = JOptionPane.showInputDialog("Enter new user name:");
-			
-			if(newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-z]+") || newUserName.length()<3){
-				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
-			}
-		}while(newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-zA-Z]+"));
+
+      if (newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-z]+")
+          || newUserName.length() < 3) {
+        JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid name. Try again.");
+      }
+    } while (newUserName.isEmpty() || newUserName.equals("") || !newUserName.matches("[a-zA-Z]+"));
 
     user.setUserName(newUserName);
     JOptionPane.showMessageDialog(null, "User modified successfully");
@@ -80,10 +114,10 @@ public class Bank {
     do {
       newUserId = Integer.parseInt(JOptionPane.showInputDialog("Enter new user ID:"));
 
-			if (newUserId<10||newUserId>250) {
-				JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
-			}
-		} while (newUserId<10||newUserId>250);
+      if (newUserId < 10 || newUserId > 250) {
+        JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
+      }
+    } while (newUserId < 10 || newUserId > 250);
     user.setId(newUserId);
     JOptionPane.showMessageDialog(null, "ID modified successfully");
   }
@@ -126,14 +160,14 @@ public class Bank {
   public void addCheckingAcc(User user) {
 
     if (user.getCheckingAcc() == null) {
-      int accNumber; 
+      int accNumber;
 
       do {
         accNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter your account number:"));
         CheckingAcc newUserCheckingAcc = new CheckingAcc(user, name, accNumber, 0);
-        if (accNumber<2||accNumber>20) {
+        if (accNumber < 2 || accNumber > 20) {
           JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid ID. Try again.");
-        } else{
+        } else {
           user.setCheckingAcc(newUserCheckingAcc);
           newUserCheckingAcc.setUser(user);
         }
@@ -147,16 +181,16 @@ public class Bank {
     if (user.getCheckingAcc() != null) {
       do {
         amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
-            if (amount > 0) {
-                break; 
-            } else {
-                JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
-            }
-        }while(true); 
-        Transaction.deposit(user.getCheckingAcc(), amount);
-        JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+        if (amount > 0) {
+          break;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+        }
+      } while (true);
+      Transaction.deposit(user.getCheckingAcc(), amount);
+      JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
     } else {
-        JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
+      JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
     }
   }
 
@@ -165,16 +199,16 @@ public class Bank {
     if (user.getCheckingAcc() != null) {
       do {
         amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
-            if (amount > 0) {
-                break; 
-            } else {
-                JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
-            }
-        }while(true); 
-        JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
-        Transaction.withdraw(user.getCheckingAcc(), amount);
-    }else {
-        JOptionPane.showMessageDialog(null, "ERROR.");
+        if (amount > 0) {
+          break;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+        }
+      } while (true);
+      JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+      Transaction.withdraw(user.getCheckingAcc(), amount);
+    } else {
+      JOptionPane.showMessageDialog(null, "ERROR.");
     }
   }
 
@@ -183,27 +217,27 @@ public class Bank {
 
     if (user.getCheckingAcc() == null) {
       JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
-    } else{
+    } else {
       do {
         amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
 
-            if (amount > 0) {
-              User targetUser = Transaction.selectTransferUser(user);
-              if (targetUser == null || targetUser.getCheckingAcc() == null) {
-                  JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-              } else {
-                  Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
-                  JOptionPane.showMessageDialog(null, "Transfer successful! Amount: " + amount);
-              }
-              return;
+        if (amount > 0) {
+          User targetUser = Transaction.selectTransferUser(user);
+          if (targetUser == null || targetUser.getCheckingAcc() == null) {
+            JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
           } else {
-              JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+            Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
+            JOptionPane.showMessageDialog(null, "Transfer successful! Amount: " + amount);
           }
-        }while(true); 
+          return;
+        } else {
+          JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
+        }
+      } while (true);
     }
   }
 
-    public static String formatTransactionHistory(User user) {
+  public static String formatTransactionHistory(User user) {
     StringBuilder msg = new StringBuilder();
 
     if (user != null && user.getCheckingAcc() != null) {
@@ -278,7 +312,7 @@ public class Bank {
           option = 4;
           break;
         case 4:
-        //historial de la cuenta
+          // historial de la cuenta
           break;
         case 5:
           break;
@@ -336,7 +370,7 @@ public class Bank {
   public static void transOptions(Bank bank, User user) {
     int option;
     do {
-      option = JOptionPane.showOptionDialog(null, formatTransactionHistory(user) ,
+      option = JOptionPane.showOptionDialog(null, formatTransactionHistory(user),
           "Account: (" + user.getUserName() + ") Choose an option:", 0, 0, null,
           transOptions.values(), transOptions.values()[0]);
       switch (option) {
