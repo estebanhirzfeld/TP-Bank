@@ -280,66 +280,106 @@ public class Bank {
   }
 
   public void deposit(User user) {
-    double amount;
-
     if (user.getCheckingAcc() != null) {
-      do {
-        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter deposit amount:"));
+      while (true) {
+        String input = JOptionPane.showInputDialog("Enter deposit amount:");
+
+        if (input == null || input.trim().isEmpty()) {
+
+          return;
+        }
+
+        if (!isNumeric(input)) {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid numeric amount.");
+          continue;
+        }
+
+        double amount = Double.parseDouble(input);
+
         if (amount > 0) {
-          break;
+          Transaction.deposit(user.getCheckingAcc(), amount);
+          return;
         } else {
           JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
         }
-      } while (true);
-      Transaction.deposit(user.getCheckingAcc(), amount);
-      JOptionPane.showMessageDialog(null, "Deposit successful! Amount: " + amount);
+      }
     } else {
       JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
     }
   }
 
   public void withdraw(User user) {
-    double amount;
-
     if (user.getCheckingAcc() != null) {
-      do {
-        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter withdrawal amount:"));
-        if (amount > 0 && amount < user.getCheckingAcc().getBalance()) {
-          break;
+      while (true) {
+        String input = JOptionPane.showInputDialog("Enter withdrawal amount:");
+
+        if (input == null || input.trim().isEmpty()) {
+
+          return;
+        }
+
+        if (!isNumeric(input)) {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid numeric amount.");
+          continue;
+        }
+
+        double amount = Double.parseDouble(input);
+
+        if (amount > 0 && amount <= user.getCheckingAcc().getBalance()) {
+          Transaction.withdraw(user.getCheckingAcc(), amount);
+
+          return;
         } else {
           JOptionPane.showMessageDialog(null,
-              "ERROR: Amount must be greater than zero and less than your actual balance.");
+              "ERROR: Amount must be less than or equal to your balance ($" + user.getCheckingAcc().getBalance() + ")");
         }
-      } while (true);
-      JOptionPane.showMessageDialog(null, "Withdrawal successful! Amount: " + amount);
-      Transaction.withdraw(user.getCheckingAcc(), amount);
+      }
     } else {
-      JOptionPane.showMessageDialog(null, "ERROR.");
+      JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
     }
   }
 
   public void transfer(User user) {
-    double amount;
+    if (user.getCheckingAcc() != null) {
+      while (true) {
+        String input = JOptionPane.showInputDialog("Enter transfer amount:");
 
-    if (user.getCheckingAcc() == null) {
-      JOptionPane.showMessageDialog(null, "You must have a checking account to make transfers.");
-    } else {
-      do {
-        amount = Double.parseDouble(JOptionPane.showInputDialog("Enter transfer amount:"));
+        if (input == null || input.trim().isEmpty()) {
+
+          return;
+        }
+
+        if (!isNumeric(input)) {
+          JOptionPane.showMessageDialog(null, "ERROR: Please enter a valid numeric amount.");
+          continue;
+        }
+
+        double amount = Double.parseDouble(input);
 
         if (amount > 0) {
           User targetUser = Transaction.selectTransferUser(user);
-          if (targetUser == null || targetUser.getCheckingAcc() == null) {
+          if (targetUser == null) {
+            JOptionPane.showMessageDialog(null, "Transfer canceled.");
+            return;
+          }
+
+          if (targetUser.getCheckingAcc() == null) {
             JOptionPane.showMessageDialog(null, "Target user does not have a checking account.");
-          } else {
+          } else if (amount <= user.getCheckingAcc().getBalance()) {
             Transaction.transfer(user.getCheckingAcc(), targetUser.getCheckingAcc(), amount);
             JOptionPane.showMessageDialog(null, "Transfer successful! Amount: " + amount);
+            return;
+          } else {
+            JOptionPane.showMessageDialog(null,
+                "ERROR: Amount must be less than or equal to your balance ($" + user.getCheckingAcc().getBalance()
+                    + ")");
           }
-          return;
         } else {
           JOptionPane.showMessageDialog(null, "ERROR: Amount must be greater than zero.");
         }
-      } while (true);
+      }
+    } else {
+      JOptionPane.showMessageDialog(null, "ERROR: User does not have a checking account.");
     }
   }
 
@@ -347,9 +387,9 @@ public class Bank {
     StringBuilder msg = new StringBuilder();
 
     if (user != null && user.getCheckingAcc() != null) {
-      msg.append("Transaction History for Account: ")
-          .append(user.getCheckingAcc().getAccNumber())
-          .append("\n\n");
+      msg.append("Transaction History for Account: \n\n")
+          .append("Account Number: ").append(user.getCheckingAcc().getAccNumber()).append("\n")
+          .append("Balance: ").append(user.getCheckingAcc().getBalance()).append("\n\n");
 
       List<Transaction> transactions = user.getCheckingAcc().getTransactionHistory();
 
